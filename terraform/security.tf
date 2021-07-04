@@ -23,7 +23,7 @@ resource "azurerm_network_security_group" "mySecGroup" {
     }
 }
 
-# Vinculamos el security group al interface de red
+# Vinculamos el security group al interface de red (NIC)
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association
 
 resource "azurerm_network_interface_security_group_association" "mySecGroupAssociation1" {

@@ -23,7 +23,7 @@ resource "azurerm_subnet" "mySubnet" {
 
 }
 
-# Create NIC
+# Create NIC (Network interface controller)
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface
 
 resource "azurerm_network_interface" "myNic1" {
@@ -34,9 +34,9 @@ resource "azurerm_network_interface" "myNic1" {
     ip_configuration {
     name                           = "myipconfiguration1"
     subnet_id                      = azurerm_subnet.mySubnet.id 
-    private_ip_address_allocation  = "Static"
+    private_ip_address_allocation  = "Static" # Puede ser Static o Dynamic. En el caso de IP dinámica no sera necesario el parametro private_ip_address
     private_ip_address             = "10.0.1.10"
-    public_ip_address_id           = azurerm_public_ip.myPublicIp1.id
+    public_ip_address_id           = azurerm_public_ip.myPublicIp1.id # Asignación de la IP pública
   }
 
     tags = {
@@ -45,7 +45,7 @@ resource "azurerm_network_interface" "myNic1" {
 
 }
 
-# IP pública
+# Definición de la IP pública para poder acceder desde fuera de Azure
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip
 
 resource "azurerm_public_ip" "myPublicIp1" {
@@ -53,7 +53,7 @@ resource "azurerm_public_ip" "myPublicIp1" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
-  sku                 = "Basic"
+  sku                 = "Basic" # Necesario para la facturación
 
     tags = {
         environment = "CP2"

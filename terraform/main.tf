@@ -1,3 +1,4 @@
+# Configuración del provider
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs
 
 terraform {
@@ -18,6 +19,7 @@ provider "azurerm" {
   tenant_id       = "<TENANT>"
 }
 
+# Creamos un grupo de recursos (Resource Group)
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group
 
 resource "azurerm_resource_group" "rg" {
@@ -34,7 +36,8 @@ resource "azurerm_resource_group" "rg" {
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
 
 resource "azurerm_storage_account" "stAccount" {
-    name                     = "staccountcp2" 
+#    name                     = "staccountcp2" 
+    name                     = var.storage_account
     resource_group_name      = azurerm_resource_group.rg.name
     location                 = azurerm_resource_group.rg.location
     account_tier             = "Standard"
