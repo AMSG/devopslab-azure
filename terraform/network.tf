@@ -26,17 +26,17 @@ resource "azurerm_subnet" "mySubnet" {
 # Create NIC (Network interface controller)
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface
 
-resource "azurerm_network_interface" "myNic1" {
-  name                = "vmnic1"  
+resource "azurerm_network_interface" "myNicMaster" {
+  name                = "vmnicMaster"  
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
     ip_configuration {
-    name                           = "myipconfiguration1"
+    name                           = "myipconfigurationMaster"
     subnet_id                      = azurerm_subnet.mySubnet.id 
     private_ip_address_allocation  = "Static" # Puede ser Static o Dynamic. En el caso de IP dinámica no sera necesario el parametro private_ip_address
     private_ip_address             = "10.0.1.10"
-    public_ip_address_id           = azurerm_public_ip.myPublicIp1.id # Asignación de la IP pública
+    public_ip_address_id           = azurerm_public_ip.myPublicIpMaster.id # Asignación de la IP pública
   }
 
     tags = {
@@ -45,24 +45,24 @@ resource "azurerm_network_interface" "myNic1" {
 
 }
 
-resource "azurerm_network_interface" "myNic2" {
-  name                = "vmnic2"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-    ip_configuration {
-    name                           = "myipconfiguration2"
-    subnet_id                      = azurerm_subnet.mySubnet.id
-    private_ip_address_allocation  = "Static" # Puede ser Static o Dynamic. En el caso de IP dinámica no sera necesario el parametro private_ip_address
-    private_ip_address             = "10.0.1.11"
-    public_ip_address_id           = azurerm_public_ip.myPublicIp2.id # Asignación de la IP pública
-  }
-
-    tags = {
-        environment = "CP2"
-    }
-
-}
+#resource "azurerm_network_interface" "myNic2" {
+#  name                = "vmnic2"
+#  location            = azurerm_resource_group.rg.location
+#  resource_group_name = azurerm_resource_group.rg.name
+#
+#    ip_configuration {
+#    name                           = "myipconfiguration2"
+#    subnet_id                      = azurerm_subnet.mySubnet.id
+#    private_ip_address_allocation  = "Static" # Puede ser Static o Dynamic. En el caso de IP dinámica no sera necesario el parametro private_ip_address
+#    private_ip_address             = "10.0.1.11"
+#    public_ip_address_id           = azurerm_public_ip.myPublicIp2.id # Asignación de la IP pública
+#  }
+#
+#    tags = {
+#        environment = "CP2"
+#    }
+#
+#}
 
 resource "azurerm_network_interface" "myNicWorkers" {
   count               = var.nworkers
@@ -87,8 +87,8 @@ resource "azurerm_network_interface" "myNicWorkers" {
 # Definición de la IP pública para poder acceder desde fuera de Azure
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip
 
-resource "azurerm_public_ip" "myPublicIp1" {
-  name                = "vmip1"
+resource "azurerm_public_ip" "myPublicIpMaster" {
+  name                = "vmipMaster"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
@@ -100,18 +100,17 @@ resource "azurerm_public_ip" "myPublicIp1" {
 
 }
 
-resource "azurerm_public_ip" "myPublicIp2" {
-  name                = "vmip2"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
-  sku                 = "Basic" # Necesario para la facturación
-
-    tags = {
-        environment = "CP2"
-    }
-
-}
+#resource "azurerm_public_ip" "myPublicIp2" {
+#  name                = "vmip2"
+#  location            = azurerm_resource_group.rg.location
+#  resource_group_name = azurerm_resource_group.rg.name
+#  allocation_method   = "Dynamic"
+#  sku                 = "Basic" # Necesario para la facturación
+#
+#    tags = {
+#        environment = "CP2"
+#    }
+#}
 
 resource "azurerm_public_ip" "myPublicIpWorkers" {
   count               = var.nworkers
